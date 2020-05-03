@@ -27,15 +27,7 @@ class RPSBot:
 
     def act(self, perform_update: bool = True) -> int:
         strategy = self._calculate_strategy()
-
-        rand = random()
-        probs_sum = 0
-        action = -1
-        for prob in strategy:
-            action += 1
-            probs_sum += prob
-            if rand < probs_sum:
-                break
+        action = sample_action(strategy)
 
         if perform_update:
             self._steps_num += 1
@@ -66,6 +58,19 @@ class RPSBot:
     @property
     def avg_reward(self) -> float:
         return self._avg_reward
+
+
+def sample_action(strategy: List[int]) -> int:
+    rand = random()
+    probs_sum = 0
+    action = -1
+    for prob in strategy:
+        action += 1
+        probs_sum += prob
+        if rand < probs_sum:
+            break
+
+    return action
 
 
 def calculate_outcome(act1: int, act2: int) -> int:
