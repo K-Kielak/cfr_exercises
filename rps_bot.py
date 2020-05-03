@@ -1,9 +1,10 @@
 from random import random
+from typing import List
 
 
 class RPSBot:
 
-    def __init__(self, initial_strategy=None):
+    def __init__(self, initial_strategy: List[float] = None):
         self._initial_strategy = initial_strategy
         if initial_strategy is None:
             # Default to uniformly mixed strategy
@@ -16,7 +17,7 @@ class RPSBot:
         self._steps_num = 0
         self._prev_action = None
 
-    def update_regret(self, opponent_action):
+    def update_regret(self, opponent_action: int):
         reward = calculate_outcome(self._prev_action, opponent_action)
         self._avg_reward += (reward - self._avg_reward) / self._steps_num
 
@@ -24,7 +25,7 @@ class RPSBot:
             regret = calculate_outcome(i, opponent_action) - reward
             self._total_regret[i] += regret
 
-    def act(self, perform_update=True):
+    def act(self, perform_update: bool = True) -> int:
         strategy = self._calculate_strategy()
 
         rand = random()
@@ -43,7 +44,7 @@ class RPSBot:
 
         return action
 
-    def _calculate_strategy(self):
+    def _calculate_strategy(self) -> List[float]:
         strategy = [max(r, 0) for r in self._total_regret]
         strategy_norm = sum(strategy)
         if strategy_norm > 0:
@@ -54,20 +55,20 @@ class RPSBot:
         strategy_norm = sum(strategy)
         return [s / strategy_norm for s in strategy]
 
-    def _update_average_strategy(self, strategy):
+    def _update_average_strategy(self, strategy: List[float]):
         self._avg_strategy = [avg + (s - avg) / self._steps_num
                               for avg, s in zip(self._avg_strategy, strategy)]
 
     @property
-    def avg_strategy(self):
+    def avg_strategy(self) -> List[float]:
         return self._avg_strategy
 
     @property
-    def avg_reward(self):
+    def avg_reward(self) -> float:
         return self._avg_reward
 
 
-def calculate_outcome(act1, act2):
+def calculate_outcome(act1: int, act2: int) -> int:
     if act1 == act2:
         return 0
 
