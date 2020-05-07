@@ -60,7 +60,7 @@ class RPSBot:
         return self._avg_reward
 
 
-def sample_action(strategy: List[int]) -> int:
+def sample_action(strategy: List[float]) -> int:
     rand = random()
     probs_sum = 0
     action = -1

@@ -1,46 +1,34 @@
-from dynamic_plots import DynamicPlot, SubplotConfig
-from rps_bot import RPSBot, sample_action
+import logging
 
-# Configurable constants
-NUM_ROUNDS = 10000
-PLOT_REFRESH_RATE = 10
-OPPONENT_STRATEGY = None  # Self-play if None
+import click
 
-# Non-configurable constants
-ACTIONS_MAP = {0: 'R', 1: 'P', 2: 'S'}
+from cfre.rps import run_rps_bot
 
 
-def main():
-    print(f'Running {NUM_ROUNDS} iterations of the game.')
-    # Start with chossing always rock as a initial strategy
-    bot = RPSBot(initial_strategy=[1, 0, 0])
-    plot = _create_dynamic_plot()
-    for i in range(NUM_ROUNDS):
-        action1 = bot.act()
-        if OPPONENT_STRATEGY is None:
-            action2 = bot.act(perform_update=False)
-        else:
-            action2 = sample_action(OPPONENT_STRATEGY)
-
-        bot.update_regret(action2)
-        if i % PLOT_REFRESH_RATE == 0:
-            plot.update([i]*3, bot.avg_strategy)
-
-    print(f'Final strategy: {bot.avg_strategy}')
-    input('Enter anything to close.')
+@click.group()
+@click.option('--debug', is_flag=True)
+def cli(debug: bool):
+    _setup_logging(debug)
 
 
-def _create_dynamic_plot():
-    rock_config = SubplotConfig('Probability of choosing rock', y_range=(0, 1))
-    paper_config = SubplotConfig('Probability of choosing paper', y_range=(0, 1))
-    scissors_config = SubplotConfig('Probability of choosing scissors', y_range=(0, 1))
-    return DynamicPlot([rock_config, paper_config, scissors_config])
+def _setup_logging(debug: bool):
+    level = logging.DEBUG if debug else logging.INFO
+    message_format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    log_formatter = logging.Formatter(fmt=message_format)
+    console_handler = logging.StreamHandler()
+    console_handler.setFormatter(log_formatter)
+    console_handler.setLevel(level)
+    logger = logging.getLogger('dle')
+    logger.setLevel(level)
+    logger.addHandler(console_handler)
+    logger.info(f'Debug mode is {"on" if debug else "off"}')
+
+
+cli.add_command(run_rps_bot)
 
 
 if __name__ == '__main__':
-    main()
-
-
+    cli()
 
 
 
