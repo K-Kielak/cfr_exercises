@@ -20,7 +20,7 @@ class DynamicPlot:
         plt.ion()
 
         rows = int(math.ceil(len(subplot_configs) / cols))
-        self._figure, axs = plt.subplots(rows, cols)
+        self._figure, axs = plt.subplots(rows, cols, constrained_layout=True)
 
         # Keep reference to only as many axes as there is configs
         axs = itertools.chain(*axs)  # Flatten sequence
