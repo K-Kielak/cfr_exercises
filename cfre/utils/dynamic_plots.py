@@ -1,3 +1,5 @@
+import itertools
+import math
 from dataclasses import dataclass
 from typing import Tuple, Optional, Sequence
 
@@ -14,9 +16,16 @@ class SubplotConfig:
 
 class DynamicPlot:
 
-    def __init__(self, subplot_configs: Sequence[SubplotConfig]):
+    def __init__(self, subplot_configs: Sequence[SubplotConfig], cols: int = 1):
         plt.ion()
-        self._figure, self._axs = plt.subplots(len(subplot_configs))
+
+        rows = int(math.ceil(len(subplot_configs) / cols))
+        self._figure, axs = plt.subplots(rows, cols, constrained_layout=True)
+
+        # Keep reference to only as many axes as there is configs
+        axs = itertools.chain(*axs)  # Flatten sequence
+        self._axs = [a for a, conf in zip(axs, subplot_configs)]
+
         self._lines = [ax.plot([], [])[0] for ax in self._axs]
 
         for ax, config in zip(self._axs, subplot_configs):
@@ -30,7 +39,6 @@ class DynamicPlot:
                 ax.set_autoscaley_on(True)
             else:
                 ax.set_ylim(*config.y_range)
-
 
     def update(self, xs: Sequence[float], ys: Sequence[float]):
         for line, x, y in zip(self._lines, xs, ys):
