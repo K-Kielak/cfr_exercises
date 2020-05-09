@@ -79,10 +79,18 @@ class BlottoBot:
 
     def _sample_action(self, strategy: np.array) -> int:
         threshold = random()
-        return np.searchsorted(strategy.cumsum(), threshold)
+        return np.searchsorted(strategy.cumsum(), threshold) + 1
 
     def _update_average_strategy(self, strategy: np.array):
         self._avg_strategy += (strategy - self._avg_strategy) / self._steps_num
+
+    @property
+    def avg_strategy(self) -> np.array:
+        return self._avg_strategy
+
+    @property
+    def avg_reward(self) -> float:
+        return self._avg_reward
 
 
 def action_to_battlefields(action: int,

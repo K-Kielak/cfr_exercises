@@ -2,6 +2,7 @@ import logging
 
 import click
 
+from cfre.blotto import run_blotto_bot
 from cfre.rps import run_rps_bot
 
 
@@ -18,13 +19,14 @@ def _setup_logging(debug: bool):
     console_handler = logging.StreamHandler()
     console_handler.setFormatter(log_formatter)
     console_handler.setLevel(level)
-    logger = logging.getLogger('dle')
+    logger = logging.getLogger('cfre')
     logger.setLevel(level)
     logger.addHandler(console_handler)
     logger.info(f'Debug mode is {"on" if debug else "off"}')
 
 
 cli.add_command(run_rps_bot)
+cli.add_command(run_blotto_bot)
 
 
 if __name__ == '__main__':
