@@ -89,6 +89,23 @@ def action_to_battlefields(action: int,
                            num_soldiers: int,
                            num_battlefields: int
                            ) -> np.array:
+    """Maps action id to number of soldiers on each battlefield
+
+    Assignment of soldiers can be treated as numbers in base `num_soldiers`.
+        Given this representation we can obtain a set of possible assignments
+        by applying two constraints:
+            1. 'Length' of the number can be at most `num_battlefields`.
+            2. Sum of all digits has to be exactly `num_soldiers`.
+
+    This method maps action ID to these number representation in a descending
+        order. E.g., for `num_soldiers = 3` and `num_battlefields = 2`:
+            |  ID | BF1 | BF2 |
+            | --- | --- | --- |
+            |  1  |  3  |  0  |
+            |  2  |  2  |  1  |
+            |  3  |  1  |  2  |
+            |  4  |  0  |  3  |
+    """
     if action < 1:
         raise ValueError(f'Action has to be at least 1 but was {action}')
 
