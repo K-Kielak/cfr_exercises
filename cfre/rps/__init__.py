@@ -32,7 +32,7 @@ def run_rps_bot():
     input('Enter anything to close.')
 
 
-def _create_dynamic_plot():
+def _create_dynamic_plot() -> DynamicPlot:
     rock_config = SubplotConfig('Probability of choosing rock', y_range=(0, 1))
     paper_config = SubplotConfig('Probability of choosing paper', y_range=(0, 1))
     scissors_config = SubplotConfig('Probability of choosing scissors', y_range=(0, 1))
