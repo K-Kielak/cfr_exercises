@@ -30,10 +30,9 @@ class KuhnTrainer:
         self._cards = None
         self._info_sets = defaultdict(lambda: InformationSet(2))
 
-    def train(self, num_iterations: int):
-        for _ in range(num_iterations):
-            self._cards = sample(CARDS, 2)
-            self._cfr('', (1, 1))
+    def play_round(self) -> float:
+        self._cards = sample(CARDS, 2)
+        return self._cfr('', (1, 1))
 
     def _cfr(self, history: str, player_probs: Tuple[float, float]):
         plays_so_far = len(history)
@@ -55,7 +54,7 @@ class KuhnTrainer:
 
         # Get (or create) information set for the player
         info_set_key = str(self._cards[player]) + history
-        info_set = self._info_sets.get(info_set_key)
+        info_set = self._info_sets[info_set_key]
 
         # Recursively call CFR for each action
         weight = player_probs[player]
@@ -64,8 +63,11 @@ class KuhnTrainer:
         expected_action_rewards = np.zeros(NUM_ACTIONS)
         for a in range(NUM_ACTIONS):
             next_hist = history + VALUE_TO_ACTION[a]
-            next_player_probs = (player_probs[0], player_probs[1])
-            next_player_probs[player] *= strategy[a]
+            if player == 0:
+                next_player_probs = (player_probs[0]*strategy[a], player_probs[1])
+            else:
+                next_player_probs = (player_probs[0], player_probs[1]*strategy[a])
+
             # negative CFR because recursive call calculates reward for an opponent
             expected_action_rewards[a] = -self._cfr(next_hist, next_player_probs)
 
