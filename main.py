@@ -3,7 +3,7 @@ import logging
 import click
 
 from cfre.blotto import run_blotto_bot
-from cfre.kuhn import run_kuhn_trainer
+from cfre.kuhn import run_kuhn_trainer, run_kuhn_game
 from cfre.rps import run_rps_bot
 
 
@@ -29,6 +29,7 @@ def _setup_logging(debug: bool):
 cli.add_command(run_rps_bot)
 cli.add_command(run_blotto_bot)
 cli.add_command(run_kuhn_trainer)
+cli.add_command(run_kuhn_game)
 
 
 if __name__ == '__main__':

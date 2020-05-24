@@ -5,11 +5,7 @@ from typing import Tuple, Dict
 import numpy as np
 
 from cfre.kuhn.information_set import InformationSet
-
-
-CARDS = [1, 2, 3]
-NUM_ACTIONS = 2
-VALUE_TO_ACTION = {0: 'p', 1: 'b'}
+from cfre.kuhn.kuhn_game import CARDS, NUM_ACTIONS, VALUE_TO_ACTION
 
 
 class KuhnTrainer:
@@ -58,7 +54,7 @@ class KuhnTrainer:
             else:
                 next_player_probs = (player_probs[0], player_probs[1]*strategy[a])
 
-            # negative CFR because recursive call calculates reward for an opponent
+            # Negative CFR because recursive call calculates reward for an opponent
             expected_action_rewards[a] = -self._cfr(next_hist, next_player_probs)
 
         full_expected_reward = np.dot(strategy, expected_action_rewards)
