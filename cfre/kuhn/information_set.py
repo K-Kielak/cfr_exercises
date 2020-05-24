@@ -1,4 +1,6 @@
+import pickle
 from random import random
+from typing import Dict
 
 import numpy as np
 
@@ -39,3 +41,21 @@ class InformationSet:
     @property
     def avg_strategy(self) -> np.array:
         return self._avg_strategy
+
+
+def infosets_to_pretty_str(infosets: Dict[str, InformationSet]):
+    out = '{\n'
+    for hist, iset in infosets.items():
+        out += f'\t{hist}: {iset.avg_strategy}\n'
+
+    return out + '}'
+
+
+def save_infosets(infosets: Dict[str, InformationSet], savepath: str):
+    with open(savepath, 'wb') as f:
+        pickle.dump(infosets, f)
+
+
+def load_infosets(loadpath: str) -> Dict[str, InformationSet]:
+    with open(loadpath, 'rb') as f:
+        return pickle.load(f)

@@ -26,9 +26,11 @@ VALUE_TO_ACTION = {0: 'p', 1: 'b'}
 
 class KuhnTrainer:
 
-    def __init__(self):
+    def __init__(self, infosets=None):
         self._cards = None
-        self._info_sets = defaultdict(lambda: InformationSet(2))
+        self._infosets = infosets
+        if self._infosets is None:
+            self._infosets = defaultdict(_new_kuhn_info_set)
 
     def play_round(self) -> float:
         self._cards = sample(CARDS, 2)
@@ -54,7 +56,7 @@ class KuhnTrainer:
 
         # Get (or create) information set for the player
         info_set_key = str(self._cards[player]) + history
-        info_set = self._info_sets[info_set_key]
+        info_set = self._infosets[info_set_key]
 
         # Recursively call CFR for each action
         weight = player_probs[player]
@@ -82,10 +84,11 @@ class KuhnTrainer:
 
     @property
     def information_sets(self) -> Dict[str, InformationSet]:
-        return self._info_sets
+        return self._infosets
 
 
-
+def _new_kuhn_info_set():  # Use instead of lambda so it's picklable
+    return InformationSet(2)
 
 
 
