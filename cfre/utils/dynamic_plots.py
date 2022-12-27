@@ -22,8 +22,8 @@ class DynamicPlot:
         rows = int(math.ceil(len(subplot_configs) / cols))
         self._figure, axs = plt.subplots(rows, cols, constrained_layout=True)
 
+        axs = axs.flatten()
         # Keep reference to only as many axes as there is configs
-        axs = itertools.chain(*axs)  # Flatten sequence
         self._axs = [a for a, conf in zip(axs, subplot_configs)]
 
         self._lines = [ax.plot([], [])[0] for ax in self._axs]
@@ -54,3 +54,6 @@ class DynamicPlot:
 
         self._figure.canvas.draw()
         self._figure.canvas.flush_events()
+
+    def save(self, path: str):
+        self._figure.savefig(path)

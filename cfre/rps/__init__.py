@@ -28,8 +28,8 @@ def run_rps_bot():
         if i % PLOT_REFRESH_RATE == 0:
             plot.update([i] * 3, bot.avg_strategy)
 
+    plot.save('rps.png')
     logger.info(f'Final strategy: {bot.avg_strategy}')
-    input('Enter anything to close.')
 
 
 def _create_dynamic_plot() -> DynamicPlot:

@@ -105,7 +105,7 @@ def action_to_battlefields(action: int,
             1. 'Length' of the number can be at most `num_battlefields`.
             2. Sum of all digits has to be exactly `num_soldiers`.
 
-    This method maps action ID to these number representation in a descending
+    This method maps action ID to these number representation in descending
         order. E.g., for `num_soldiers = 3` and `num_battlefields = 2`:
             |  ID | BF1 | BF2 |
             | --- | --- | --- |

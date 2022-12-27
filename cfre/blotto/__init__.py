@@ -29,6 +29,7 @@ def run_blotto_bot():
         if i % PLOT_REFRESH_RATE == 0:
             plot.update(np.full(bot.avg_strategy.shape, i), bot.avg_strategy)
 
+    plot.save('blotto.png')
 
 def _create_dynamic_plot() -> DynamicPlot:
     num_pure_strategies = comb_with_repetition(NUM_SOLDIERS, NUM_BATTLEFIELDS)
