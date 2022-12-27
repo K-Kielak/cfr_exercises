@@ -1,6 +1,8 @@
 from random import random
 from typing import List
 
+import numpy as np
+
 
 class RPSBot:
 
@@ -24,6 +26,7 @@ class RPSBot:
         for i in range(len(self._total_regret)):
             regret = calculate_outcome(i, opponent_action) - reward
             self._total_regret[i] += regret
+            self._total_regret = np.maximum(self._total_regret, 0)
 
     def act(self, perform_update: bool = True) -> int:
         strategy = self._calculate_strategy()
@@ -48,7 +51,8 @@ class RPSBot:
         return [s / strategy_norm for s in strategy]
 
     def _update_average_strategy(self, strategy: List[float]):
-        self._avg_strategy = [avg + (s - avg) / self._steps_num
+        # Average is weighted by t where t is the time at which the strategy was sampled
+        self._avg_strategy = [avg + 2 * (s - avg) / (self._steps_num + 1)
                               for avg, s in zip(self._avg_strategy, strategy)]
 
     @property
